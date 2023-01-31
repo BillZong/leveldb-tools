@@ -2,43 +2,50 @@ package main
 
 import (
 	"bytes"
-	"strings"
-	"encoding/json"
 	"encoding/hex"
-	"os"
+	"encoding/json"
 	"fmt"
-)
+	"os"
+	"strings"
 
-import "github.com/syndtr/goleveldb/leveldb"
+	"github.com/syndtr/goleveldb/leveldb"
+)
 
 func splitToJsonStrArray(str string) string {
 	var fmtBuffer bytes.Buffer
 	lines := strings.Split(str, "\n")
+
 	for i, line := range lines {
 		fmtBuffer.WriteString(fmt.Sprintf("\"%s\"", line))
-		if i < len(lines) - 1 {
+		if i < len(lines)-1 {
 			fmtBuffer.WriteString(",")
 		}
 	}
+
 	return fmtBuffer.String()
 }
 
 func main() {
-
 	printUsage := func() {
 		fmt.Println("Usage: leveldb_readkey db_folder_path key1 [key2] [key3]")
 	}
 
 	fileExists := func(path string) (bool, error) {
 		_, err := os.Stat(path)
-		if err == nil { return true, nil }
-		if os.IsNotExist(err) { return false, nil }
+		if err == nil {
+			return true, nil
+		}
+
+		if os.IsNotExist(err) {
+			return false, nil
+		}
 		return true, err
 	}
 
 	if len(os.Args) == 1 {
 		fmt.Println("Level/Snappy DB folder path is not supplied")
 		printUsage()
+
 		return
 	}
 
@@ -49,6 +56,7 @@ func main() {
 	if !dbPresent {
 		fmt.Printf("The DB path: %s does not exist.\n", dbPath)
 		printUsage()
+
 		return
 	}
 
@@ -58,6 +66,7 @@ func main() {
 	if err != nil {
 		fmt.Println("Could not open DB from:", dbPath)
 		printUsage()
+
 		return
 	}
 
@@ -67,7 +76,8 @@ func main() {
 		err := json.Unmarshal([]byte(dataStr), &dataMap)
 		if err != nil {
 			// fallback encoding (dumping raw text and then to hex)
-			nonJsonData := fmt.Sprintf("{\"__STR\":\"%s\"}", strings.Replace(dataStr,"\n", "\\n", -1))
+			nonJsonData := fmt.Sprintf("{\"__STR\":\"%s\"}", strings.Replace(dataStr, "\n", "\\n", -1))
+
 			// fmt.Println(nonJsonData)
 			err = json.Unmarshal([]byte(nonJsonData), &dataMap)
 			if err != nil {
@@ -80,10 +90,15 @@ func main() {
 				}
 			}
 		}
+
 		jsonData, err := json.Marshal(dataMap)
-		if err != nil { return fmt.Sprintf("\"Error Marshalling:%s, %s\"", dataStr, err) }
-		var out bytes.Buffer 
+		if err != nil {
+			return fmt.Sprintf("\"Error Marshalling:%s, %s\"", dataStr, err)
+		}
+
+		var out bytes.Buffer
 		json.Indent(&out, jsonData, "  ", "  ")
+
 		return out.String()
 	}
 
@@ -93,16 +108,19 @@ func main() {
 			fmt.Println("Error reading Key:", key)
 			return
 		}
-		fmt.Printf("  \"%s\":%s",key, formatValue(data))
+
+		fmt.Printf("  \"%s\":%s", key, formatValue(data))
 	}
 
 	fmt.Print("{")
+
 	for i, value := range os.Args[2:] {
 		fmt.Println()
 		printKey(value)
-		if i + 3 != len(os.Args) {
+		if i+3 != len(os.Args) {
 			fmt.Print(",")
 		}
 	}
+
 	fmt.Println("\n}")
 }
