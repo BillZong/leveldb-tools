@@ -1,5 +1,8 @@
 .PHONY: bin
-bin: del jsonval key keys kvs predel
+bin: bindir del jsonval key keys kvs predel
+
+bindir:
+	mkdir -p bin/
 
 del:
 	go build -o bin/leveldb_del leveldb_del.go
