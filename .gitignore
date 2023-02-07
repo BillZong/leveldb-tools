@@ -1,8 +1,1 @@
-leveldb_jsonval
-leveldb_jsonval.exe
-leveldb_key
-leveldb_key.exe
-leveldb_keys
-leveldb_keys.exe
-leveldb_kvs
-leveldb_kvs.exe
+bin/
