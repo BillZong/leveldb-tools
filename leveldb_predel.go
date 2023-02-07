@@ -5,11 +5,26 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/syndtr/goleveldb/leveldb"
 	"github.com/syndtr/goleveldb/leveldb/opt"
 	"github.com/syndtr/goleveldb/leveldb/util"
 )
+
+func hexOrRaw(str string) []byte {
+	if strings.HasPrefix(str, "0x") {
+		raw := strings.TrimPrefix(str, "0x")
+		b, _ := hex.DecodeString(raw)
+		return b
+	} else if strings.HasPrefix(str, "0X") {
+		raw := strings.TrimPrefix(str, "0X")
+		b, _ := hex.DecodeString(raw)
+		return b
+	}
+
+	return []byte(str)
+}
 
 func main() {
 	printUsage := func() {
@@ -54,7 +69,7 @@ func main() {
 		return
 	}
 
-	prefix := os.Args[2]
+	prefix := hexOrRaw(os.Args[2])
 	keylen, err := strconv.Atoi(os.Args[3])
 	if err != nil {
 		fmt.Println("Could not get key(without prefix) length:", err)
@@ -64,7 +79,7 @@ func main() {
 	}
 
 	iter := db.NewIterator(
-		bytesPrefixRange([]byte(prefix), make([]byte, keylen)), // from zero
+		bytesPrefixRange(prefix, make([]byte, keylen)), // from zero
 		nil,
 	)
 

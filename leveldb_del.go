@@ -1,11 +1,27 @@
 package main
 
 import (
+	"encoding/hex"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/syndtr/goleveldb/leveldb"
 )
+
+func hexOrRaw(str string) []byte {
+	if strings.HasPrefix(str, "0x") {
+		raw := strings.TrimPrefix(str, "0x")
+		b, _ := hex.DecodeString(raw)
+		return b
+	} else if strings.HasPrefix(str, "0X") {
+		raw := strings.TrimPrefix(str, "0X")
+		b, _ := hex.DecodeString(raw)
+		return b
+	}
+
+	return []byte(str)
+}
 
 func main() {
 
@@ -49,7 +65,7 @@ func main() {
 		return
 	}
 
-	key := []byte(os.Args[2])
+	key := hexOrRaw(os.Args[2])
 
 	if err := db.Delete(key, nil); err != nil {
 		fmt.Println(err)
