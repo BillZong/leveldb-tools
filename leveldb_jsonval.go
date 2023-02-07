@@ -27,7 +27,7 @@ func splitToJsonStrArray(str string) string {
 
 func main() {
 	printUsage := func() {
-		fmt.Println("Usage: leveldb_readkey db_folder_path key1 [key2] [key3]")
+		fmt.Printf("Usage: %s db_folder_path key1 [key2] [key3]\n", os.Args[0])
 	}
 
 	fileExists := func(path string) (bool, error) {

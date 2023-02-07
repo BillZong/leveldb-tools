@@ -1,17 +1,16 @@
 package main
 
 import (
-	"encoding/hex"
 	"fmt"
 	"os"
 
 	"github.com/syndtr/goleveldb/leveldb"
-	"github.com/syndtr/goleveldb/leveldb/opt"
 )
 
 func main() {
+
 	printUsage := func() {
-		fmt.Println("Usage: leveldb_listkeys db_folder_path")
+		fmt.Printf("Usage: %s db_folder_path\n", os.Args[0])
 	}
 
 	fileExists := func(path string) (bool, error) {
@@ -22,14 +21,12 @@ func main() {
 		if os.IsNotExist(err) {
 			return false, nil
 		}
-
 		return true, err
 	}
 
 	if len(os.Args) == 1 {
 		fmt.Println("Level/Snappy DB folder path is not supplied")
 		printUsage()
-
 		return
 	}
 
@@ -40,7 +37,6 @@ func main() {
 	if !dbPresent {
 		fmt.Printf("The DB path: %s does not exist.\n", dbPath)
 		printUsage()
-
 		return
 	}
 
@@ -50,26 +46,15 @@ func main() {
 	if err != nil {
 		fmt.Println("Could not open DB from:", dbPath)
 		printUsage()
-
 		return
 	}
 
-	iter := db.NewIterator(
-		nil, /* slice range, default get all */
-		&opt.ReadOptions{
-			DontFillCache: true,
-		},
-	)
-
+	iter := db.NewIterator(nil /* slice range, default get all */, nil /* default read options */)
 	for iter.Next() {
-		k := iter.Key()
-		key := hex.EncodeToString(k)
-		v := iter.Value()
-		value := hex.EncodeToString(v)
-
-		fmt.Printf("%s: %s\n", key, value)
+		key := iter.Key()
+		keyName := string(key[:])
+		fmt.Println(keyName)
 	}
-
 	iter.Release()
 	err = iter.Error()
 	if err != nil {
