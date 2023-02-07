@@ -1,8 +1,8 @@
-leveldb_listkeys
-leveldb_listkeys.exe
-leveldb_kv
-leveldb_kv.exe
-leveldb_readkey
-leveldb_readkey.exe
-leveldb_readjsonval
-leveldb_readjsonval.exe
+leveldb_jsonval
+leveldb_jsonval.exe
+leveldb_key
+leveldb_key.exe
+leveldb_keys
+leveldb_keys.exe
+leveldb_kvs
+leveldb_kvs.exe
