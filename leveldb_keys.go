@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/hex"
 	"fmt"
 	"os"
 
@@ -51,11 +52,13 @@ func main() {
 
 	iter := db.NewIterator(nil /* slice range, default get all */, nil /* default read options */)
 	for iter.Next() {
-		key := iter.Key()
-		keyName := string(key[:])
-		fmt.Println(keyName)
+		k := iter.Key()
+		key := hex.EncodeToString(k)
+		fmt.Println(key)
 	}
+
 	iter.Release()
+
 	err = iter.Error()
 	if err != nil {
 		fmt.Println(err)
