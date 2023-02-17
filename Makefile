@@ -28,3 +28,27 @@ install: bin
 	$(eval GOPATH = $(shell go env GOPATH))
 	mkdir -p $(GOPATH)/bin
 	cp -R bin/ $(GOPATH)/bin/
+
+.PHONY: linux-bin
+linux-bin: linux-bindir linux-del linux-jsonval linux-key linux-keys linux-kvs linux-predel
+
+linux-bindir:
+	mkdir -p bin/linux
+
+linux-del:
+	env GOOS=linux GOARCH=amd64 go build -o bin/linux/leveldb_del leveldb_del.go
+
+linux-jsonval:
+	env GOOS=linux GOARCH=amd64 go build -o bin/linux/leveldb_jsonval leveldb_jsonval.go
+
+linux-key:
+	env GOOS=linux GOARCH=amd64 go build -o bin/linux/leveldb_key leveldb_key.go
+
+linux-keys:
+	env GOOS=linux GOARCH=amd64 go build -o bin/linux/leveldb_keys leveldb_keys.go
+
+linux-kvs:
+	env GOOS=linux GOARCH=amd64 go build -o bin/linux/leveldb_kvs leveldb_kvs.go
+
+linux-predel:
+	env GOOS=linux GOARCH=amd64 go build -o bin/linux/leveldb_predel leveldb_predel.go
