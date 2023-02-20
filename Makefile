@@ -1,5 +1,5 @@
 .PHONY: bin
-bin: bindir del jsonval key keys kvs predel
+bin: bindir del jsonval key keys kvs predel putkey
 
 bindir:
 	mkdir -p bin/
@@ -22,6 +22,9 @@ kvs:
 predel:
 	go build -o bin/leveldb_predel leveldb_predel.go
 
+putkey:
+	go build -o bin/leveldb_predel leveldb_putkey.go
+
 .PHONY: install
 install: bin
 	# make sure it is in binary
@@ -30,7 +33,7 @@ install: bin
 	cp -R bin/ $(GOPATH)/bin/
 
 .PHONY: linux-bin
-linux-bin: linux-bindir linux-del linux-jsonval linux-key linux-keys linux-kvs linux-predel
+linux-bin: linux-bindir linux-del linux-jsonval linux-key linux-keys linux-kvs linux-predel linux-putkey
 
 linux-bindir:
 	mkdir -p bin/linux
@@ -52,3 +55,6 @@ linux-kvs:
 
 linux-predel:
 	env GOOS=linux GOARCH=amd64 go build -o bin/linux/leveldb_predel leveldb_predel.go
+
+linux-putkey:
+	env GOOS=linux GOARCH=amd64 go build -o bin/linux/leveldb_putkey leveldb_putkey.go
