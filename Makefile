@@ -23,7 +23,7 @@ predel:
 	go build -o bin/leveldb_predel leveldb_predel.go
 
 putkey:
-	go build -o bin/leveldb_predel leveldb_putkey.go
+	go build -o bin/leveldb_putkey leveldb_putkey.go
 
 .PHONY: install
 install: bin
