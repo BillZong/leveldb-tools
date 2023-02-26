@@ -61,14 +61,14 @@ func main() {
 	}
 
 	db, err := leveldb.OpenFile(dbPath, nil)
-	defer db.Close()
-
 	if err != nil {
-		fmt.Println("Could not open DB from:", dbPath)
+		fmt.Printf("Could not open DB from:%s, err: %v\n", dbPath, err)
 		printUsage()
 
 		return
 	}
+
+	defer db.Close()
 
 	formatValue := func(data []byte) string {
 		dataStr := string(data[:])
