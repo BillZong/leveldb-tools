@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/syndtr/goleveldb/leveldb"
+	"github.com/syndtr/goleveldb/leveldb/opt"
 )
 
 func main() {
@@ -41,7 +42,9 @@ func main() {
 		return
 	}
 
-	db, err := leveldb.OpenFile(dbPath, nil)
+	db, err := leveldb.OpenFile(dbPath, &opt.Options{
+		ReadOnly: true,
+	})
 	defer db.Close()
 
 	if err != nil {

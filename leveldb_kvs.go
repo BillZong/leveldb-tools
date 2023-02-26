@@ -44,7 +44,9 @@ func main() {
 		return
 	}
 
-	db, err := leveldb.OpenFile(dbPath, nil)
+	db, err := leveldb.OpenFile(dbPath, &opt.Options{
+		ReadOnly: true,
+	})
 	defer db.Close()
 
 	if err != nil {
